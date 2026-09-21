@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seu Nome — Portfólio</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+  <h1>Seu Nome</h1>
+  <p class="tagline">Desenvolvedor(a) &mdash; edite esta frase de efeito</p>
+  <nav>
+    <a href="#sobre">Sobre</a>
+    <a href="#projetos">Projetos</a>
+    <a href="#contato">Contato</a>
+  </nav>
+</header>
+
+<main>
+
+  <section id="sobre">
+    <h2>Sobre mim</h2>
+    <p>
+      Escreva aqui um parágrafo curto sobre você: o que você faz, quais tecnologias
+      domina e o que te motiva. Edite este texto em <code>index.html</code>.
+    </p>
+  </section>
+
+  <section id="projetos">
+    <h2>Projetos</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>Nome do Projeto 1</h3>
+        <p>Descrição curta do projeto: o problema que resolve e as tecnologias usadas.</p>
+        <a href="#" target="_blank" rel="noopener">Ver no GitHub &rarr;</a>
+      </article>
+      <article class="card">
+        <h3>Nome do Projeto 2</h3>
+        <p>Descrição curta do projeto: o problema que resolve e as tecnologias usadas.</p>
+        <a href="#" target="_blank" rel="noopener">Ver no GitHub &rarr;</a>
+      </article>
+      <article class="card">
+        <h3>Nome do Projeto 3</h3>
+        <p>Descrição curta do projeto: o problema que resolve e as tecnologias usadas.</p>
+        <a href="#" target="_blank" rel="noopener">Ver no GitHub &rarr;</a>
+      </article>
+    </div>
+  </section>
+
+  <section id="contato">
+    <h2>Contato</h2>
+    <ul class="links">
+      <li><a href="https://github.com/palhaco1337" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="#" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="mailto:seuemail@exemplo.com">seuemail@exemplo.com</a></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  <p>&copy; <span id="year"></span> Seu Nome</p>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
