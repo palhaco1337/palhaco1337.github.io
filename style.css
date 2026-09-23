@@ -126,6 +126,18 @@ h2 {
   color: var(--text-dim);
 }
 
+section p a {
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--text-dim);
+}
+
+section p a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  text-shadow: 0 0 8px var(--glow);
+}
+
 code {
   background: var(--bg-alt);
   border: 1px solid var(--border);
