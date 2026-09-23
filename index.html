@@ -8,18 +8,27 @@
 </head>
 <body>
 
+<canvas id="matrix"></canvas>
+
 <header class="hero">
-  <h1>NAYAF</h1>
-  <p class="tagline">Desenvolvedor(a) | edite esta frase de efeito</p>
+  <pre class="ascii-banner" aria-hidden="true">█   █  ███  █   █  ███  █████
+██  █ █   █ █   █ █   █ █
+█ █ █ █   █  █ █  █   █ █
+█ █ █ █████   █   █████ ████
+█  ██ █   █   █   █   █ █
+█   █ █   █   █   █   █ █
+█   █ █   █   █   █   █ █    </pre>
+  <p class="tagline">&gt; Desenvolvedor(a) | edite esta frase de efeito_</p>
+  <pre class="divider" aria-hidden="true">╔══════════════════════════════════════════╗</pre>
   <nav>
-    <a href="#sobre">Sobre</a>
+    <a href="#sobre">[ sobre ]</a>
   </nav>
 </header>
 
 <main>
 
   <section id="sobre">
-    <h2>Sobre mim</h2>
+    <h2><span class="prompt">$</span> sobre_mim.sh</h2>
     <p>
       Escreva aqui um parágrafo curto sobre você: o que você faz, quais tecnologias
       domina e o que te motiva. Edite este texto em <code>index.html</code>.
@@ -29,11 +38,52 @@
 </main>
 
 <footer>
+  <pre class="divider" aria-hidden="true">╚══════════════════════════════════════════╝</pre>
   <p>&copy; <span id="year"></span> Nayaf</p>
 </footer>
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Matrix rain effect
+  (function () {
+    var canvas = document.getElementById('matrix');
+    var ctx = canvas.getContext('2d');
+    var fontSize = 16;
+    var columns, drops;
+    var chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEFNAYAF$#@&%';
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      columns = Math.floor(canvas.width / fontSize);
+      drops = new Array(columns).fill(1);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function draw() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#00ff41';
+      ctx.font = fontSize + 'px monospace';
+
+      for (var i = 0; i < drops.length; i++) {
+        var char = chars.charAt(Math.floor(Math.random() * chars.length));
+        var x = i * fontSize;
+        var y = drops[i] * fontSize;
+        ctx.fillText(char, x, y);
+
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    setInterval(draw, 40);
+  })();
 </script>
 
 </body>

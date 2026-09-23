@@ -1,10 +1,11 @@
 :root {
-  --bg: #0a0a0a;
-  --bg-alt: #141414;
-  --border: #2a2a2a;
-  --text: #ededed;
-  --text-dim: #a0a0a0;
-  --accent: #ffffff;
+  --bg: #000000;
+  --bg-alt: #0a0f0a;
+  --border: #0f3d0f;
+  --text: #c8ffc8;
+  --text-dim: #4d9a4d;
+  --accent: #00ff41;
+  --glow: rgba(0, 255, 65, 0.55);
 }
 
 * {
@@ -15,25 +16,57 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Courier New", "Consolas", monospace;
   line-height: 1.6;
+}
+
+#matrix {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  display: block;
+  width: 100vw;
+  height: 100vh;
 }
 
 .hero {
   text-align: center;
-  padding: 5rem 1.5rem 3rem;
+  padding: 5rem 1.5rem 2rem;
   border-bottom: 1px solid var(--border);
 }
 
-.hero h1 {
-  margin: 0 0 0.5rem;
-  font-size: 2.5rem;
-  letter-spacing: 0.02em;
+.ascii-banner {
+  display: inline-block;
+  margin: 0 auto 1rem;
+  color: var(--accent);
+  text-shadow: 0 0 6px var(--glow), 0 0 14px var(--glow);
+  font-size: clamp(0.5rem, 2.2vw, 1rem);
+  line-height: 1.15;
+  letter-spacing: 0.05em;
+  white-space: pre;
+  animation: flicker 3.5s infinite;
+}
+
+@keyframes flicker {
+  0%, 96%, 100% { opacity: 1; }
+  97% { opacity: 0.7; }
+  98% { opacity: 1; }
+  99% { opacity: 0.8; }
 }
 
 .tagline {
   color: var(--text-dim);
-  margin: 0 0 2rem;
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+}
+
+.divider {
+  color: var(--border);
+  margin: 0 auto 1.5rem;
+  font-size: 0.8rem;
+  letter-spacing: -0.05em;
+  overflow: hidden;
+  white-space: pre;
 }
 
 nav {
@@ -47,17 +80,20 @@ nav a {
   text-decoration: none;
   border-bottom: 1px solid transparent;
   padding-bottom: 2px;
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 nav a:hover {
   border-color: var(--accent);
+  color: var(--accent);
+  text-shadow: 0 0 8px var(--glow);
 }
 
 main {
   max-width: 800px;
   margin: 0 auto;
   padding: 0 1.5rem;
+  background: rgba(0, 0, 0, 0.55);
 }
 
 section {
@@ -70,16 +106,24 @@ section:last-child {
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   margin-bottom: 1.5rem;
   letter-spacing: 0.02em;
+  color: var(--accent);
+  text-shadow: 0 0 6px var(--glow);
+}
+
+.prompt {
+  color: var(--text-dim);
 }
 
 code {
   background: var(--bg-alt);
+  border: 1px solid var(--border);
   padding: 0.15em 0.4em;
   border-radius: 4px;
   font-size: 0.9em;
+  color: var(--accent);
 }
 
 .grid {
@@ -131,16 +175,17 @@ code {
 
 footer {
   text-align: center;
-  padding: 2rem 1.5rem;
+  padding: 1rem 1.5rem 2rem;
   color: var(--text-dim);
   font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.55);
 }
 
 @media (max-width: 480px) {
-  .hero h1 {
-    font-size: 2rem;
-  }
   nav {
     gap: 1.2rem;
+  }
+  .divider {
+    font-size: 0.5rem;
   }
 }
