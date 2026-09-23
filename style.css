@@ -38,20 +38,29 @@ body {
 .ascii-banner {
   display: inline-block;
   margin: 0 auto 1rem;
-  color: var(--accent);
-  text-shadow: 0 0 6px var(--glow), 0 0 14px var(--glow);
+  background: linear-gradient(180deg, #ff8a1e 0%, #ffb347 20%, #ffffff 48%, #d6f0ff 65%, #3fa9ff 100%);
+  background-size: 100% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 -2px 6px rgba(255, 138, 30, 0.45)) drop-shadow(0 8px 10px rgba(63, 169, 255, 0.4));
   font-size: clamp(0.5rem, 2.2vw, 1rem);
   line-height: 1.15;
   letter-spacing: 0.05em;
   white-space: pre;
-  animation: flicker 3.5s infinite;
+  animation: melt 7s ease-in-out infinite, flicker 3.5s infinite;
+}
+
+@keyframes melt {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 0% 100%; }
 }
 
 @keyframes flicker {
   0%, 96%, 100% { opacity: 1; }
-  97% { opacity: 0.7; }
+  97% { opacity: 0.85; }
   98% { opacity: 1; }
-  99% { opacity: 0.8; }
+  99% { opacity: 0.9; }
 }
 
 .tagline {
