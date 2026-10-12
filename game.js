@@ -102,7 +102,22 @@
     document.getElementById('game-again').focus();
   }
 
-  // ---------- IP / location ----------
+  // ---------- IP / location dossier ----------
+
+  var leafletMap = null, mapLayers = [];
+
+  function rows(el, list) {
+    el.textContent = '';
+    for (var i = 0; i < list.length; i++) {
+      if (list[i][1] === undefined || list[i][1] === null || list[i][1] === '') continue;
+      var dt = document.createElement('dt');
+      var dd = document.createElement('dd');
+      dt.textContent = list[i][0];
+      dd.textContent = String(list[i][1]);
+      el.appendChild(dt);
+      el.appendChild(dd);
+    }
+  }
 
   function showIntel(d) {
     var ip = document.getElementById('intel-ip');
@@ -112,6 +127,9 @@
       ip.textContent = 'Não foi possível localizar você.';
       loc.textContent = 'O serviço de localização pode estar bloqueado (ad-block) ou fora do ar.';
       flag.hidden = true;
+      document.getElementById('map-note').textContent = 'Sem localização, sem mapa.';
+      rows(document.getElementById('intel-whois'), [['Status', 'Sem IP para consultar.']]);
+      showConnection(null);
       return;
     }
     ip.textContent = 'IP: ' + d.ip;
@@ -123,6 +141,9 @@
     } else {
       flag.hidden = true;
     }
+    showMap(d);
+    showConnection(d);
+    whois(d);
   }
 
   function locate() {
@@ -135,18 +156,219 @@
       .then(function (r) { return r.json(); })
       .then(function (j) {
         if (!j || j.success === false) throw new Error('ipwho.is failed');
-        return { ip: j.ip, city: j.city, region: j.region, country: j.country, cc: j.country_code };
+        var c = j.connection || {}, tz = j.timezone || {};
+        return {
+          ip: j.ip, type: j.type, city: j.city, region: j.region, country: j.country, cc: j.country_code,
+          continent: j.continent, lat: j.latitude, lon: j.longitude, postal: j.postal, calling: j.calling_code,
+          isp: c.isp, org: c.org, asn: c.asn, domain: c.domain, tz: tz.id, utc: tz.utc
+        };
       })
       .catch(function () {
         return fetch('https://ipapi.co/json/')
           .then(function (r) { return r.json(); })
           .then(function (j) {
             if (!j || j.error) throw new Error('ipapi.co failed');
-            return { ip: j.ip, city: j.city, region: j.region, country: j.country_name, cc: j.country_code };
+            return {
+              ip: j.ip, type: j.version, city: j.city, region: j.region, country: j.country_name, cc: j.country_code,
+              continent: j.continent_code, lat: j.latitude, lon: j.longitude, postal: j.postal, calling: j.country_calling_code,
+              isp: j.org, org: j.org, asn: j.asn, tz: j.timezone, utc: j.utc_offset
+            };
           });
       })
       .then(function (d) { intel = d; showIntel(d); })
       .catch(function () { showIntel(null); });
+  }
+
+  // --- TF2-style map ---
+
+  function loadLeaflet(cb, fail) {
+    if (window.L) { cb(); return; }
+    var css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+    document.head.appendChild(css);
+    var js = document.createElement('script');
+    js.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+    js.onload = cb;
+    js.onerror = fail;
+    document.head.appendChild(js);
+  }
+
+  var BRIEFCASE =
+    '<svg viewBox="0 0 48 40" width="42" height="35" aria-hidden="true">' +
+    '<rect x="16" y="2" width="16" height="8" rx="2" fill="none" stroke="#3a2c1e" stroke-width="3"/>' +
+    '<rect x="2" y="8" width="44" height="30" rx="4" fill="#b8383b" stroke="#3a2c1e" stroke-width="3"/>' +
+    '<rect x="2" y="18" width="44" height="4" fill="#8b2a2c"/>' +
+    '<rect x="20" y="16" width="8" height="8" rx="1" fill="#d6b25a" stroke="#3a2c1e" stroke-width="1.5"/>' +
+    '</svg>';
+
+  function showMap(d) {
+    var note = document.getElementById('map-note');
+    if (typeof d.lat !== 'number' || typeof d.lon !== 'number') { note.textContent = 'Coordenadas indisponíveis.'; return; }
+    loadLeaflet(function () {
+      var L = window.L;
+      var pos = [d.lat, d.lon];
+      if (!leafletMap) {
+        leafletMap = L.map('intel-map', { scrollWheelZoom: false });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 16,
+          attribution: '&copy; OpenStreetMap'
+        }).addTo(leafletMap);
+      }
+      for (var i = 0; i < mapLayers.length; i++) leafletMap.removeLayer(mapLayers[i]);
+      leafletMap.setView(pos, 10);
+      mapLayers = [
+        L.circle(pos, { radius: 15000, color: '#b8383b', weight: 3, dashArray: '8 6', fillColor: '#b8383b', fillOpacity: 0.15 }).addTo(leafletMap),
+        L.marker(pos, { icon: L.divIcon({ className: 'intel-marker', html: BRIEFCASE, iconSize: [42, 35], iconAnchor: [21, 18] }) })
+          .addTo(leafletMap)
+          .bindTooltip('Inteligência RED: ' + [d.city, d.country].filter(Boolean).join(', '), { direction: 'top', offset: [0, -16] })
+      ];
+      setTimeout(function () { leafletMap.invalidateSize(); }, 50);
+    }, function () {
+      note.textContent = 'Não foi possível carregar o mapa.';
+    });
+  }
+
+  // --- WHOIS via RDAP ---
+
+  function vcard(ent, key) {
+    var v = ent && ent.vcardArray && ent.vcardArray[1];
+    if (!v) return '';
+    for (var i = 0; i < v.length; i++) if (v[i][0] === key) return v[i][3];
+    return '';
+  }
+
+  function flatEntities(list, out) {
+    out = out || [];
+    for (var i = 0; list && i < list.length; i++) {
+      out.push(list[i]);
+      flatEntities(list[i].entities, out);
+    }
+    return out;
+  }
+
+  function eventDate(obj, action) {
+    var ev = obj.events || [];
+    for (var i = 0; i < ev.length; i++) {
+      if (ev[i].eventAction === action) return new Date(ev[i].eventDate).toLocaleDateString('pt-BR');
+    }
+    return '';
+  }
+
+  function registryName(url) {
+    var h = '';
+    try { h = new URL(url).hostname; } catch (e) { return ''; }
+    if (h.indexOf('registro.br') >= 0) return 'Registro.br (NIC.br)';
+    if (h.indexOf('lacnic') >= 0) return 'LACNIC';
+    if (h.indexOf('arin') >= 0) return 'ARIN';
+    if (h.indexOf('ripe') >= 0) return 'RIPE NCC';
+    if (h.indexOf('apnic') >= 0) return 'APNIC';
+    if (h.indexOf('afrinic') >= 0) return 'AFRINIC';
+    return h;
+  }
+
+  function whois(d) {
+    var el = document.getElementById('intel-whois');
+    rows(el, [['Status', 'Consultando RDAP...']]);
+    var finalUrl = '';
+    if (!/^[0-9a-fA-F:.]+$/.test(d.ip)) { rows(el, [['Status', 'IP inválido para consulta.']]); return; }
+    fetch('https://rdap.org/ip/' + d.ip)
+      .then(function (r) { finalUrl = r.url; if (!r.ok) throw new Error('rdap ' + r.status); return r.json(); })
+      .then(function (j) {
+        var ents = flatEntities(j.entities);
+        var owner = '', doc = '', abuse = '', tech = '';
+        for (var i = 0; i < ents.length; i++) {
+          var roles = ents[i].roles || [];
+          if (!owner && roles.indexOf('registrant') >= 0) {
+            owner = vcard(ents[i], 'fn');
+            var ids = ents[i].publicIds || [];
+            if (ids.length) doc = String(ids[0].type).toUpperCase() + ' ' + ids[0].identifier;
+          }
+          if (!abuse && roles.indexOf('abuse') >= 0) abuse = vcard(ents[i], 'email') || vcard(ents[i], 'fn');
+          if (!tech && roles.indexOf('technical') >= 0) tech = vcard(ents[i], 'email') || vcard(ents[i], 'fn');
+        }
+        var block = j.handle && j.handle.indexOf('/') > 0 ? j.handle
+          : (j.startAddress && j.endAddress ? j.startAddress + ' – ' + j.endAddress : j.handle);
+        rows(el, [
+          ['Bloco', block],
+          ['Nome da rede', j.name],
+          ['Tipo', j.type],
+          ['Dono do bloco', owner],
+          ['Documento', doc],
+          ['ASN', j.nicbr_autnum ? 'AS' + j.nicbr_autnum : (d.asn ? 'AS' + String(d.asn).replace(/^AS/i, '') : '')],
+          ['País', j.country],
+          ['Registrado em', eventDate(j, 'registration')],
+          ['Última alteração', eventDate(j, 'last changed')],
+          ['Contato de abuso', abuse],
+          ['Contato técnico', tech],
+          ['Registro (RIR/NIR)', registryName(finalUrl)]
+        ]);
+      })
+      .catch(function () {
+        rows(el, [['Status', 'Não foi possível consultar o RDAP agora.']]);
+      });
+  }
+
+  // --- connection + browser ---
+
+  function browserName(ua) {
+    var m;
+    if ((m = ua.match(/Edg\/(\d+)/))) return 'Edge ' + m[1];
+    if ((m = ua.match(/OPR\/(\d+)/))) return 'Opera ' + m[1];
+    if ((m = ua.match(/Firefox\/(\d+)/))) return 'Firefox ' + m[1];
+    if ((m = ua.match(/Chrome\/(\d+)/))) return 'Chrome ' + m[1];
+    if ((m = ua.match(/Version\/([\d.]+).*Safari/))) return 'Safari ' + m[1];
+    return 'Desconhecido';
+  }
+
+  function osName(ua) {
+    var m;
+    if (/Windows NT 10/.test(ua)) return 'Windows 10/11';
+    if ((m = ua.match(/Windows NT ([\d.]+)/))) return 'Windows NT ' + m[1];
+    if ((m = ua.match(/Android ([\d.]+)/))) return 'Android ' + m[1];
+    if ((m = ua.match(/(?:iPhone|CPU) OS ([\d_]+)/))) return 'iOS ' + m[1].replace(/_/g, '.');
+    if (/Mac OS X/.test(ua)) return 'macOS';
+    if (/CrOS/.test(ua)) return 'ChromeOS';
+    if (/Linux/.test(ua)) return 'Linux';
+    return 'Desconhecido';
+  }
+
+  function showConnection(d) {
+    var ua = navigator.userAgent || '';
+    var net = navigator.connection || {};
+    var list = [];
+    if (d) {
+      list.push(
+        ['Tipo de IP', d.type],
+        ['Provedor (ISP)', d.isp],
+        ['Organização', d.org !== d.isp ? d.org : ''],
+        ['ASN', d.asn ? 'AS' + String(d.asn).replace(/^AS/i, '') : ''],
+        ['Domínio do provedor', d.domain],
+        ['Coordenadas aprox.', typeof d.lat === 'number' ? d.lat.toFixed(2) + ', ' + d.lon.toFixed(2) : ''],
+        ['CEP aprox.', d.postal],
+        ['Continente', d.continent],
+        ['DDI', d.calling ? '+' + String(d.calling).replace(/^\+/, '') : ''],
+        ['Fuso (pelo IP)', d.tz ? d.tz + (d.utc ? ' (UTC' + d.utc + ')' : '') : '']
+      );
+    }
+    var tz = '';
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) {}
+    list.push(
+      ['Navegador', browserName(ua)],
+      ['Sistema', osName(ua)],
+      ['Idioma', (navigator.languages || [navigator.language]).join(', ')],
+      ['Tela', screen.width + ' × ' + screen.height + ' @' + (window.devicePixelRatio || 1) + 'x'],
+      ['Janela', window.innerWidth + ' × ' + window.innerHeight],
+      ['Núcleos de CPU', navigator.hardwareConcurrency],
+      ['Memória (aprox.)', navigator.deviceMemory ? navigator.deviceMemory + ' GB' : ''],
+      ['Rede (estimada)', net.effectiveType ? net.effectiveType.toUpperCase() + (net.downlink ? ' · ~' + net.downlink + ' Mbps' : '') : ''],
+      ['Tela de toque', navigator.maxTouchPoints > 0 ? 'Sim (' + navigator.maxTouchPoints + ' pontos)' : 'Não'],
+      ['Fuso do navegador', tz],
+      ['Hora local', new Date().toLocaleString('pt-BR')],
+      ['Do Not Track', navigator.doNotTrack === '1' ? 'Ativado' : 'Desativado'],
+      ['Cookies', navigator.cookieEnabled ? 'Ativados' : 'Bloqueados']
+    );
+    rows(document.getElementById('intel-conn'), list);
   }
 
   // ---------- spawning ----------

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lato:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=tf2-3">
+<link rel="stylesheet" href="style.css?v=tf2-4">
 </head>
 <body>
 
@@ -74,20 +74,44 @@
     <button class="btn btn-play" id="game-go" type="button">Começar</button>
   </div>
 
-  <div class="game-card" id="game-end" hidden>
+  <div class="game-card game-card-wide" id="game-end" hidden>
     <h2>Tempo esgotado!</h2>
     <p class="game-score">Pontuação: <strong id="end-score">0</strong></p>
     <p class="game-small" id="end-stats"></p>
-    <div class="intel">
-      <p class="intel-title">Inteligência capturada</p>
-      <div class="intel-body">
-        <img id="intel-flag" alt="" width="80" height="54" hidden>
-        <div>
-          <p class="intel-ip" id="intel-ip">Localizando...</p>
-          <p class="intel-loc" id="intel-loc"></p>
+
+    <div class="dossier">
+      <div class="intel">
+        <p class="intel-title">Inteligência capturada</p>
+        <div class="intel-body">
+          <img id="intel-flag" alt="" width="80" height="54" hidden>
+          <div>
+            <p class="intel-ip" id="intel-ip">Localizando...</p>
+            <p class="intel-loc" id="intel-loc"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="intel intel-map">
+        <p class="intel-title">Mapa da operação</p>
+        <div class="map-frame">
+          <div id="intel-map" aria-label="Mapa com a área aproximada da sua conexão"></div>
+          <p class="map-note" id="map-note">Área aproximada da sua conexão (precisão de cidade, não do endereço).</p>
         </div>
       </div>
     </div>
+
+    <details class="intel-details">
+      <summary>WHOIS / RDAP do IP</summary>
+      <dl class="intel-table" id="intel-whois"><dt>Status</dt><dd>Aguardando...</dd></dl>
+    </details>
+
+    <details class="intel-details">
+      <summary>Conexão e navegador</summary>
+      <dl class="intel-table" id="intel-conn"></dl>
+    </details>
+
+    <p class="game-small intel-privacy">Esses dados aparecem só para você e não são salvos por este site. Fontes: ipwho.is, rdap.org e o seu próprio navegador.</p>
+
     <div class="game-actions">
       <button class="btn btn-play" id="game-again" type="button">Jogar de novo</button>
       <button class="btn" id="game-exit" type="button">Sair</button>
@@ -236,7 +260,7 @@
 </script>
 
 <script src="battle.js?v=1"></script>
-<script src="game.js?v=1"></script>
+<script src="game.js?v=3"></script>
 
 </body>
 </html>

@@ -500,3 +500,150 @@ button.btn {
     height: 230px;
   }
 }
+
+/* ---------- dossier (end screen) ---------- */
+
+.game-card-wide {
+  width: min(820px, calc(100% - 32px));
+}
+
+.dossier {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 1rem;
+  margin: 1rem 0;
+  align-items: stretch;
+}
+
+.dossier .intel {
+  margin: 0;
+}
+
+.intel-map {
+  display: flex;
+  flex-direction: column;
+}
+
+.map-frame {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#intel-map {
+  position: relative;
+  z-index: 0;
+  flex: 1;
+  min-height: 220px;
+  background: #3c352e;
+}
+
+#intel-map::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 450;
+  pointer-events: none;
+  box-shadow: inset 0 0 40px rgba(28, 25, 22, 0.85);
+  background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0 2px, transparent 2px 6px);
+}
+
+#intel-map .leaflet-tile-pane {
+  filter: sepia(0.6) saturate(0.85) hue-rotate(-12deg) brightness(0.82) contrast(1.05);
+}
+
+#intel-map .leaflet-control-attribution {
+  background: rgba(28, 25, 22, 0.75);
+  color: var(--text-dim);
+}
+
+#intel-map .leaflet-control-attribution a {
+  color: var(--text);
+  border: 0;
+}
+
+#intel-map .leaflet-bar a {
+  background: var(--panel-alt);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.intel-marker {
+  background: none;
+  border: 0;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.6));
+  animation: intel-bob 1.6s ease-in-out infinite;
+}
+
+@keyframes intel-bob {
+  0%, 100% { margin-top: -18px; }
+  50% { margin-top: -24px; }
+}
+
+.map-note {
+  margin: 0 !important;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  text-align: left;
+  border-top: 2px solid var(--border);
+}
+
+.intel-details {
+  margin: 0 0 0.75rem;
+  text-align: left;
+  background: var(--panel-alt);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+}
+
+.intel-details summary {
+  cursor: pointer;
+  padding: 0.55rem 0.9rem;
+  font-family: "Anton", "Impact", sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.intel-details summary:hover {
+  color: var(--unique);
+}
+
+.intel-table {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.3rem 1rem;
+  margin: 0;
+  padding: 0.2rem 0.9rem 0.9rem;
+  font-size: 0.88rem;
+}
+
+.intel-table dt {
+  color: var(--text-dim);
+}
+
+.intel-table dd {
+  margin: 0;
+  color: var(--text);
+  font-family: "Consolas", "Courier New", monospace;
+  word-break: break-word;
+}
+
+.intel-privacy {
+  margin-top: 0.25rem !important;
+}
+
+@media (max-width: 700px) {
+  .dossier {
+    grid-template-columns: 1fr;
+  }
+  .intel-table {
+    grid-template-columns: 1fr;
+    gap: 0 0;
+  }
+  .intel-table dd {
+    margin-bottom: 0.45rem;
+  }
+}
