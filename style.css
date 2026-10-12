@@ -22,16 +22,60 @@
 
 body {
   margin: 0;
-  background:
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.015) 0 2px, transparent 2px 6px),
-    radial-gradient(ellipse at 15% 0%, rgba(184, 56, 59, 0.28), transparent 55%),
-    radial-gradient(ellipse at 85% 0%, rgba(88, 133, 162, 0.28), transparent 55%),
-    var(--bg);
-  background-attachment: fixed;
+  background: var(--bg);
   color: var(--text);
   font-family: "Lato", "Verdana", sans-serif;
   line-height: 1.6;
   min-height: 100vh;
+}
+
+.map-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(28, 25, 22, 0.1) 0%, rgba(28, 25, 22, 0.45) 55%, rgba(28, 25, 22, 0.88) 100%),
+    url("map.svg") center bottom / cover no-repeat;
+}
+
+#rockets {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+main,
+footer,
+.team-bar {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.soldier {
+  width: clamp(130px, 22vw, 220px);
+  height: auto;
+  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.6));
+  transform-origin: 30% 100%;
+}
+
+.soldier.recoil {
+  animation: recoil 0.35s ease-out;
+}
+
+@keyframes recoil {
+  0% { transform: translate(0, 0) rotate(0); }
+  25% { transform: translate(-6px, 3px) rotate(-2deg); }
+  100% { transform: translate(0, 0) rotate(0); }
 }
 
 .team-bar {
@@ -60,10 +104,9 @@ body {
   margin: 0;
   font-family: "Anton", "Impact", sans-serif;
   font-weight: 400;
-  font-size: clamp(4rem, 18vw, 9rem);
+  font-size: clamp(4.5rem, 20vw, 10rem);
   line-height: 1;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
   background: linear-gradient(180deg, #f6eed6 0%, #ebd9a8 45%, #cf8a4a 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -270,5 +313,12 @@ main + .team-bar {
   }
   .panel-header {
     font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-top {
+    flex-direction: column;
+    align-items: center;
   }
 }

@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2c4257"/>
+      <stop offset="0.55" stop-color="#7d7466"/>
+      <stop offset="1" stop-color="#d08c4e"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3d6b6c"/>
+      <stop offset="1" stop-color="#22403f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- sky -->
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <g fill="#e8d3b0" opacity="0.18">
+    <ellipse cx="260" cy="150" rx="170" ry="26"/>
+    <ellipse cx="380" cy="128" rx="110" ry="20"/>
+    <ellipse cx="1180" cy="190" rx="200" ry="28"/>
+    <ellipse cx="1320" cy="168" rx="120" ry="20"/>
+    <ellipse cx="760" cy="90" rx="140" ry="18"/>
+  </g>
+
+  <!-- distant cliffs -->
+  <path d="M0 520 L90 430 L180 445 L260 380 L380 400 L470 350 L560 420 L640 410 L700 470 L900 470 L960 400 L1060 380 L1150 420 L1240 360 L1340 390 L1430 340 L1520 400 L1600 380 L1600 900 L0 900 Z" fill="#6e4b32"/>
+  <path d="M0 520 L90 430 L180 445 L260 380 L380 400 L470 350 L560 420 L640 410 L700 470 L900 470 L960 400 L1060 380 L1150 420 L1240 360 L1340 390 L1430 340 L1520 400 L1600 380 L1600 410 L1520 430 L1430 375 L1340 420 L1240 395 L1150 450 L1060 410 L960 430 L900 495 L700 495 L640 440 L560 450 L470 385 L380 430 L260 415 L180 470 L90 460 L0 550 Z" fill="#a8704a" opacity="0.6"/>
+
+  <!-- pines -->
+  <g fill="#2f3a26">
+    <path d="M40 560 l22 -70 l22 70 Z M90 565 l18 -55 l18 55 Z M560 520 l20 -60 l20 60 Z M600 525 l16 -48 l16 48 Z M1000 525 l20 -62 l20 62 Z M1040 530 l15 -45 l15 45 Z M1520 555 l22 -72 l22 72 Z M1480 560 l17 -52 l17 52 Z"/>
+  </g>
+
+  <!-- ground -->
+  <path d="M0 600 L640 590 L640 900 L0 900 Z" fill="#5c4630"/>
+  <path d="M960 590 L1600 600 L1600 900 L960 900 Z" fill="#5c4630"/>
+  <path d="M0 600 L640 590 L640 610 L0 622 Z M960 590 L1600 600 L1600 622 L960 610 Z" fill="#7a5c3c"/>
+
+  <!-- water channel -->
+  <path d="M640 590 L960 590 L990 900 L610 900 Z" fill="url(#water)"/>
+  <g stroke="#9cc4c0" stroke-width="3" opacity="0.35" stroke-linecap="round">
+    <path d="M690 680 h60 M820 720 h70 M720 790 h50 M850 840 h80"/>
+  </g>
+
+  <!-- RED base (wooden barn) -->
+  <g>
+    <rect x="150" y="380" width="420" height="225" fill="#7a3a2b"/>
+    <g stroke="#5e2a1f" stroke-width="3">
+      <path d="M150 420 h420 M150 460 h420 M150 500 h420 M150 540 h420 M150 580 h420"/>
+    </g>
+    <path d="M130 385 L360 290 L590 385 Z" fill="#b8383b"/>
+    <path d="M130 385 L360 290 L590 385 L590 398 L360 305 L130 398 Z" fill="#8b2a2c"/>
+    <rect x="215" y="440" width="70" height="55" fill="#f1c26b" opacity="0.85"/>
+    <rect x="435" y="440" width="70" height="55" fill="#f1c26b" opacity="0.85"/>
+    <path d="M250 440 v55 M215 467 h70 M470 440 v55 M435 467 h70" stroke="#5e2a1f" stroke-width="4"/>
+    <rect x="320" y="520" width="80" height="85" fill="#3b1d16"/>
+    <rect x="300" y="330" width="120" height="40" rx="4" fill="#ebe3cb"/>
+    <text x="360" y="361" font-family="Impact, Anton, sans-serif" font-size="30" text-anchor="middle" fill="#b8383b">RED</text>
+  </g>
+
+  <!-- BLU base (concrete) -->
+  <g>
+    <rect x="1030" y="360" width="420" height="245" fill="#4d6478"/>
+    <rect x="1010" y="345" width="460" height="22" fill="#3e5263"/>
+    <rect x="1180" y="300" width="140" height="50" fill="#5885a2"/>
+    <g fill="#d9e8f2" opacity="0.8">
+      <rect x="1080" y="410" width="60" height="45"/>
+      <rect x="1210" y="410" width="60" height="45"/>
+      <rect x="1340" y="410" width="60" height="45"/>
+    </g>
+    <rect x="1200" y="510" width="100" height="95" fill="#24323e"/>
+    <path d="M1200 530 h100 M1200 550 h100 M1200 570 h100 M1200 590 h100" stroke="#3e5263" stroke-width="3"/>
+    <rect x="1190" y="312" width="120" height="34" rx="4" fill="#ebe3cb"/>
+    <text x="1250" y="339" font-family="Impact, Anton, sans-serif" font-size="27" text-anchor="middle" fill="#5885a2">BLU</text>
+  </g>
+
+  <!-- covered bridge -->
+  <g>
+    <rect x="590" y="520" width="420" height="70" fill="#6b4a2e"/>
+    <g stroke="#4a321e" stroke-width="3">
+      <path d="M590 540 h420 M590 560 h420"/>
+      <path d="M640 520 v70 M700 520 v70 M760 520 v70 M820 520 v70 M880 520 v70 M940 520 v70"/>
+    </g>
+    <path d="M575 525 L800 470 L1025 525 Z" fill="#8b5a32"/>
+    <rect x="590" y="588" width="420" height="14" fill="#3e2a18"/>
+    <path d="M620 602 v40 M980 602 v40" stroke="#3e2a18" stroke-width="12"/>
+  </g>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 280">
+  <!-- boots -->
+  <rect x="68" y="248" width="40" height="22" rx="6" fill="#2b2118"/>
+  <rect x="118" y="248" width="42" height="22" rx="6" fill="#2b2118"/>
+
+  <!-- legs -->
+  <path d="M74 168 L111 168 L106 252 L74 252 Z" fill="#5b4a36"/>
+  <path d="M113 168 L150 168 L155 252 L120 252 Z" fill="#5b4a36"/>
+  <path d="M111 172 L113 172 L112 230 Z" fill="#3e3224"/>
+
+  <!-- left arm (hanging) -->
+  <path d="M68 96 Q48 120 48 160 L64 162 Q66 128 78 108 Z" fill="#8b2f2a"/>
+  <circle cx="56" cy="166" r="9" fill="#d9a77c"/>
+
+  <!-- torso -->
+  <path d="M64 92 Q58 160 68 172 L156 172 Q166 160 160 92 Q112 76 64 92 Z" fill="#a33a32"/>
+  <path d="M111 86 L111 170" stroke="#7d2a25" stroke-width="3"/>
+  <g fill="#d6b25a">
+    <circle cx="104" cy="110" r="2.5"/><circle cx="104" cy="130" r="2.5"/><circle cx="104" cy="150" r="2.5"/>
+  </g>
+
+  <!-- grenade strap -->
+  <path d="M70 96 L150 166" stroke="#4a3a28" stroke-width="10" stroke-linecap="round"/>
+  <g fill="#5e6b3c" stroke="#3a4226" stroke-width="2">
+    <ellipse cx="88" cy="114" rx="7" ry="9"/>
+    <ellipse cx="108" cy="131" rx="7" ry="9"/>
+    <ellipse cx="128" cy="148" rx="7" ry="9"/>
+  </g>
+
+  <!-- belt -->
+  <rect x="66" y="162" width="94" height="12" fill="#3a2c1e"/>
+  <rect x="104" y="162" width="16" height="12" fill="#d6b25a"/>
+
+  <!-- neck + head -->
+  <rect x="98" y="72" width="26" height="18" fill="#c99470"/>
+  <path d="M86 56 Q86 92 111 94 Q138 92 138 56 Z" fill="#e0b48a"/>
+  <!-- yelling mouth -->
+  <path d="M100 74 Q111 70 123 74 Q121 88 111 88 Q101 88 100 74 Z" fill="#4a1c16"/>
+  <path d="M102 75 Q111 72 121 75 L120 78 Q111 75 103 78 Z" fill="#f2ead8"/>
+
+  <!-- helmet (covers eyes) -->
+  <path d="M80 64 Q78 20 111 18 Q146 20 144 64 Z" fill="#5c5236"/>
+  <path d="M72 62 L152 62 Q154 70 146 70 L78 70 Q70 70 72 62 Z" fill="#4a4229"/>
+  <path d="M92 32 Q104 24 120 26" stroke="#7a6e4a" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- rocket launcher on right shoulder, aimed up-right (-22deg) -->
+  <g transform="rotate(-22 150 95)">
+    <rect x="104" y="86" width="132" height="22" rx="4" fill="#4f5b3b"/>
+    <rect x="104" y="86" width="132" height="6" rx="3" fill="#6b7a50"/>
+    <rect x="96" y="83" width="18" height="28" rx="3" fill="#3a4229"/>
+    <rect x="226" y="80" width="22" height="34" rx="3" fill="#3a4229"/>
+    <rect x="160" y="74" width="20" height="12" fill="#2f3522"/>
+    <rect x="150" y="108" width="10" height="20" rx="2" fill="#2f3522"/>
+  </g>
+
+  <!-- right arm gripping launcher -->
+  <path d="M150 92 Q172 104 166 128 L150 124 Q154 112 140 104 Z" fill="#8b2f2a"/>
+  <circle cx="160" cy="128" r="9" fill="#d9a77c"/>
+</svg>

@@ -3,18 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NAYAF | Portfólio</title>
+<title>h3x | Portfólio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lato:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=tf2">
+<link rel="stylesheet" href="style.css?v=tf2-2">
 </head>
 <body>
+
+<div class="map-bg" aria-hidden="true"></div>
+<canvas id="rockets" aria-hidden="true"></canvas>
 
 <div class="team-bar" aria-hidden="true"><span class="red"></span><span class="blu"></span></div>
 
 <header class="hero">
-  <h1 class="logo">Nayaf</h1>
+  <div class="hero-top">
+    <img class="soldier" id="soldier" src="soldier.svg" alt="Soldier do TF2 com lança-foguetes" width="260" height="280">
+    <h1 class="logo">h3x</h1>
+  </div>
   <p class="tagline">CTF Player <span class="vs">//</span> focus on web vulneratilities <span class="vs">//</span></p>
   <nav>
     <a class="btn" href="#sobre">Sobre</a>
@@ -53,6 +59,142 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Rockets fired from the Soldier's launcher
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var canvas = document.getElementById('rockets');
+    var ctx = canvas.getContext('2d');
+    var soldier = document.getElementById('soldier');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w, h;
+
+    // muzzle position and aim inside soldier.svg (viewBox 260x280, launcher rotated -22deg)
+    var MUZZLE_X = 242 / 260, MUZZLE_Y = 60 / 280, AIM = -22 * Math.PI / 180;
+
+    var rockets = [], smoke = [], sparks = [], rings = [];
+
+    function resize() {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function fire() {
+      var r = soldier.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < h && r.width > 0) {
+        var x = r.left + r.width * MUZZLE_X;
+        var y = r.top + r.height * MUZZLE_Y;
+        var a = AIM + (Math.random() - 0.5) * 0.25;
+        rockets.push({ x: x, y: y, a: a, v: 4, life: 0, max: 50 + Math.random() * 60 });
+        for (var i = 0; i < 10; i++) {
+          smoke.push({ x: x, y: y, vx: Math.cos(a) * Math.random() * 2, vy: Math.sin(a) * Math.random() * 2 - 0.3, r: 4 + Math.random() * 5, life: 1 });
+        }
+        sparks.push({ x: x, y: y, vx: 0, vy: 0, life: 1, flash: true });
+        soldier.classList.remove('recoil');
+        void soldier.offsetWidth;
+        soldier.classList.add('recoil');
+      }
+      setTimeout(fire, 1400 + Math.random() * 1800);
+    }
+
+    function explode(x, y) {
+      for (var i = 0; i < 26; i++) {
+        var a = Math.random() * Math.PI * 2, s = 1 + Math.random() * 5;
+        sparks.push({ x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 1 });
+      }
+      for (var j = 0; j < 12; j++) {
+        smoke.push({ x: x, y: y, vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2 - 0.4, r: 8 + Math.random() * 10, life: 1 });
+      }
+      rings.push({ x: x, y: y, r: 6, life: 1 });
+    }
+
+    function drawRocket(p) {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.a);
+      // flame
+      var f = 10 + Math.random() * 10;
+      ctx.fillStyle = 'rgba(255, 170, 40, 0.9)';
+      ctx.beginPath();
+      ctx.moveTo(-12, -4); ctx.lineTo(-12 - f, 0); ctx.lineTo(-12, 4); ctx.fill();
+      ctx.fillStyle = '#fff3b0';
+      ctx.beginPath();
+      ctx.moveTo(-12, -2); ctx.lineTo(-12 - f * 0.5, 0); ctx.lineTo(-12, 2); ctx.fill();
+      // body
+      ctx.fillStyle = '#6b6f5a';
+      ctx.fillRect(-12, -4, 18, 8);
+      ctx.fillStyle = '#b8383b';
+      ctx.beginPath();
+      ctx.moveTo(6, -4); ctx.lineTo(14, 0); ctx.lineTo(6, 4); ctx.fill();
+      ctx.fillStyle = '#3a3d30';
+      ctx.fillRect(-14, -6, 4, 12);
+      ctx.restore();
+    }
+
+    function tick() {
+      ctx.clearRect(0, 0, w, h);
+
+      for (var i = smoke.length - 1; i >= 0; i--) {
+        var s = smoke[i];
+        s.x += s.vx; s.y += s.vy; s.r += 0.35; s.life -= 0.018;
+        if (s.life <= 0) { smoke.splice(i, 1); continue; }
+        ctx.fillStyle = 'rgba(200, 190, 175,' + (s.life * 0.35) + ')';
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fill();
+      }
+
+      for (var k = rockets.length - 1; k >= 0; k--) {
+        var p = rockets[k];
+        p.v = Math.min(p.v + 0.45, 16);
+        p.x += Math.cos(p.a) * p.v;
+        p.y += Math.sin(p.a) * p.v;
+        p.life++;
+        if (p.life % 2 === 0) {
+          smoke.push({ x: p.x - Math.cos(p.a) * 16, y: p.y - Math.sin(p.a) * 16, vx: 0, vy: -0.2, r: 3, life: 0.9 });
+        }
+        if (p.life > p.max || p.x > w + 40 || p.y < -40) {
+          if (p.x < w && p.y > 0) explode(p.x, p.y);
+          rockets.splice(k, 1);
+          continue;
+        }
+        drawRocket(p);
+      }
+
+      for (var m = rings.length - 1; m >= 0; m--) {
+        var g = rings[m];
+        g.r += 4; g.life -= 0.06;
+        if (g.life <= 0) { rings.splice(m, 1); continue; }
+        ctx.strokeStyle = 'rgba(255, 220, 150,' + g.life + ')';
+        ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2); ctx.stroke();
+      }
+
+      for (var n = sparks.length - 1; n >= 0; n--) {
+        var q = sparks[n];
+        if (q.flash) {
+          q.life -= 0.2;
+          if (q.life <= 0) { sparks.splice(n, 1); continue; }
+          ctx.fillStyle = 'rgba(255, 230, 140,' + q.life + ')';
+          ctx.beginPath(); ctx.arc(q.x, q.y, 14 * q.life + 4, 0, Math.PI * 2); ctx.fill();
+          continue;
+        }
+        q.x += q.vx; q.y += q.vy; q.vy += 0.08; q.vx *= 0.96; q.life -= 0.03;
+        if (q.life <= 0) { sparks.splice(n, 1); continue; }
+        ctx.fillStyle = q.life > 0.6 ? 'rgba(255, 240, 170,' + q.life + ')' : 'rgba(230, 110, 40,' + q.life + ')';
+        ctx.beginPath(); ctx.arc(q.x, q.y, 2.5 * q.life + 1, 0, Math.PI * 2); ctx.fill();
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    setTimeout(fire, 800);
+    requestAnimationFrame(tick);
+  })();
 </script>
 
 </body>
