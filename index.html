@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lato:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=tf2-2">
+<link rel="stylesheet" href="style.css?v=tf2-3">
 </head>
 <body>
 
@@ -23,9 +23,14 @@
   </div>
   <p class="tagline">CTF Player <span class="vs">//</span> focus on web vulneratilities <span class="vs">//</span></p>
   <nav>
+    <button class="btn btn-play" id="play-btn" type="button">Play Survive</button>
     <a class="btn" href="#sobre">Sobre</a>
   </nav>
 </header>
+
+<section class="battle" aria-label="Batalha RED vs BLU">
+  <canvas id="battle" aria-hidden="true"></canvas>
+</section>
 
 <main>
 
@@ -56,6 +61,39 @@
 <footer>
   <p>&copy; <span id="year"></span> Nayaf</p>
 </footer>
+
+<div class="game" id="game" role="dialog" aria-modal="true" aria-label="Play Survive" hidden>
+  <canvas id="game-canvas" tabindex="-1"></canvas>
+  <button class="game-close" id="game-close" type="button" aria-label="Fechar jogo">&times;</button>
+
+  <div class="game-card" id="game-start">
+    <h2>Play Survive</h2>
+    <p>Você é o Soldier. Mire com o mouse (ou toque na tela) e dispare foguetes nos alvos.</p>
+    <p class="game-small">Alvo grande 10 pts &middot; pequeno 25 pts &middot; Scout BLU 50 pts &middot; acertos em sequência multiplicam</p>
+    <p class="game-small">30 segundos no relógio.</p>
+    <button class="btn btn-play" id="game-go" type="button">Começar</button>
+  </div>
+
+  <div class="game-card" id="game-end" hidden>
+    <h2>Tempo esgotado!</h2>
+    <p class="game-score">Pontuação: <strong id="end-score">0</strong></p>
+    <p class="game-small" id="end-stats"></p>
+    <div class="intel">
+      <p class="intel-title">Inteligência capturada</p>
+      <div class="intel-body">
+        <img id="intel-flag" alt="" width="80" height="54" hidden>
+        <div>
+          <p class="intel-ip" id="intel-ip">Localizando...</p>
+          <p class="intel-loc" id="intel-loc"></p>
+        </div>
+      </div>
+    </div>
+    <div class="game-actions">
+      <button class="btn btn-play" id="game-again" type="button">Jogar de novo</button>
+      <button class="btn" id="game-exit" type="button">Sair</button>
+    </div>
+  </div>
+</div>
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -196,6 +234,9 @@
     requestAnimationFrame(tick);
   })();
 </script>
+
+<script src="battle.js?v=1"></script>
+<script src="game.js?v=1"></script>
 
 </body>
 </html>
