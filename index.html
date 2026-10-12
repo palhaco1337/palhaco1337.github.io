@@ -4,86 +4,55 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NAYAF | Portfólio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Lato:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<canvas id="matrix"></canvas>
+<div class="team-bar" aria-hidden="true"><span class="red"></span><span class="blu"></span></div>
 
 <header class="hero">
-  <pre class="ascii-banner" aria-hidden="true">█   █  ███  █   █  ███  █████
-██  █ █   █ █   █ █   █ █
-█ █ █ █   █  █ █  █   █ █
-█ █ █ █████   █   █████ ████
-█  ██ █   █   █   █   █ █
-█   █ █   █   █   █   █ █
-█   █ █   █   █   █   █ █    </pre>
-  <p class="tagline">&gt; CTF Player | focus on web vulneratilities_</p>
-  <pre class="divider" aria-hidden="true">╔══════════════════════════════════════════╗</pre>
+  <h1 class="logo">Nayaf</h1>
+  <p class="tagline">CTF Player <span class="vs">//</span> focus on web vulneratilities <span class="vs">//</span></p>
   <nav>
-    <a href="#sobre">[ sobre ]</a>
+    <a class="btn" href="#sobre">Sobre</a>
   </nav>
 </header>
 
 <main>
 
-  <section id="sobre">
-    <h2><span class="prompt">$</span> sobre_mim.sh</h2>
-    <p>
-      Certificações: OSCP+, OSCP, OWSP.<br>
-      <a href="https://www.fiap.com.br/2025/11/10/next-2025-evento-da-fiap-reune-mais-de-6-mil-pessoas-100-projetos-desenvolvidos-por-alunos-confira/">FIAP Next</a> — 2nd Place 2025 (Crypto Challenges only).
-    </p>
+  <section id="sobre" class="panel">
+    <h2 class="panel-header">Sobre mim</h2>
+    <div class="panel-body">
+      <p class="label">Certificações</p>
+      <ul class="items">
+        <li class="item unusual"><span class="name">OSCP+</span><span class="quality">Unusual</span></li>
+        <li class="item strange"><span class="name">OSCP</span><span class="quality">Strange</span></li>
+        <li class="item genuine"><span class="name">OSWP</span><span class="quality">Genuine</span></li>
+      </ul>
+
+      <p class="label">Conquistas</p>
+      <div class="achievement">
+        <span class="medal" aria-hidden="true">2</span>
+        <p>
+          <a href="https://www.fiap.com.br/2025/11/10/next-2025-evento-da-fiap-reune-mais-de-6-mil-pessoas-100-projetos-desenvolvidos-por-alunos-confira/">FIAP Next</a> — 2nd Place 2025 (Crypto Challenges only).
+        </p>
+      </div>
+    </div>
   </section>
 
 </main>
 
+<div class="team-bar" aria-hidden="true"><span class="red"></span><span class="blu"></span></div>
+
 <footer>
-  <pre class="divider" aria-hidden="true">╚══════════════════════════════════════════╝</pre>
   <p>&copy; <span id="year"></span> Nayaf</p>
 </footer>
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
-
-  // Matrix rain effect
-  (function () {
-    var canvas = document.getElementById('matrix');
-    var ctx = canvas.getContext('2d');
-    var fontSize = 16;
-    var columns, drops;
-    var chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEFNAYAF$#@&%';
-
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      columns = Math.floor(canvas.width / fontSize);
-      drops = new Array(columns).fill(1);
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    function draw() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.fillStyle = '#f0f0f0';
-      ctx.font = fontSize + 'px monospace';
-
-      for (var i = 0; i < drops.length; i++) {
-        var char = chars.charAt(Math.floor(Math.random() * chars.length));
-        var x = i * fontSize;
-        var y = drops[i] * fontSize;
-        ctx.fillText(char, x, y);
-
-        if (y > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
-        drops[i]++;
-      }
-    }
-
-    setInterval(draw, 40);
-  })();
 </script>
 
 </body>
