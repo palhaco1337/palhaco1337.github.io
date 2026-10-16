@@ -96,7 +96,7 @@
     document.getElementById('end-score').textContent = score;
     var acc = shots ? Math.round(hits / shots * 100) : 0;
     document.getElementById('end-stats').textContent =
-      hits + ' alvos acertados · ' + shots + ' foguetes · precisão ' + acc + '% · maior combo x' + Math.max(1, best);
+      hits + ' targets hit · ' + shots + ' rockets · accuracy ' + acc + '% · best combo x' + Math.max(1, best);
     endCard.hidden = false;
     locate();
     document.getElementById('game-again').focus();
@@ -124,11 +124,11 @@
     var loc = document.getElementById('intel-loc');
     var flag = document.getElementById('intel-flag');
     if (!d) {
-      ip.textContent = 'Não foi possível localizar você.';
-      loc.textContent = 'O serviço de localização pode estar bloqueado (ad-block) ou fora do ar.';
+      ip.textContent = 'Could not locate you.';
+      loc.textContent = 'The location service may be blocked (ad-block) or down.';
       flag.hidden = true;
-      document.getElementById('map-note').textContent = 'Sem localização, sem mapa.';
-      rows(document.getElementById('intel-whois'), [['Status', 'Sem IP para consultar.']]);
+      document.getElementById('map-note').textContent = 'No location, no map.';
+      rows(document.getElementById('intel-whois'), [['Status', 'No IP to look up.']]);
       showConnection(null);
       return;
     }
@@ -136,7 +136,7 @@
     loc.textContent = [d.city, d.region, d.country].filter(Boolean).join(', ');
     if (d.cc) {
       flag.src = 'https://flagcdn.com/w160/' + d.cc.toLowerCase() + '.png';
-      flag.alt = 'Bandeira: ' + (d.country || d.cc);
+      flag.alt = 'Flag: ' + (d.country || d.cc);
       flag.hidden = false;
     } else {
       flag.hidden = true;
@@ -148,7 +148,7 @@
 
   function locate() {
     if (intel) { showIntel(intel); return; }
-    document.getElementById('intel-ip').textContent = 'Localizando...';
+    document.getElementById('intel-ip').textContent = 'Locating...';
     document.getElementById('intel-loc').textContent = '';
     document.getElementById('intel-flag').hidden = true;
 
@@ -204,7 +204,7 @@
 
   function showMap(d) {
     var note = document.getElementById('map-note');
-    if (typeof d.lat !== 'number' || typeof d.lon !== 'number') { note.textContent = 'Coordenadas indisponíveis.'; return; }
+    if (typeof d.lat !== 'number' || typeof d.lon !== 'number') { note.textContent = 'Coordinates unavailable.'; return; }
     loadLeaflet(function () {
       var L = window.L;
       var pos = [d.lat, d.lon];
@@ -221,11 +221,11 @@
         L.circle(pos, { radius: 15000, color: '#b8383b', weight: 3, dashArray: '8 6', fillColor: '#b8383b', fillOpacity: 0.15 }).addTo(leafletMap),
         L.marker(pos, { icon: L.divIcon({ className: 'intel-marker', html: BRIEFCASE, iconSize: [42, 35], iconAnchor: [21, 18] }) })
           .addTo(leafletMap)
-          .bindTooltip('Inteligência RED: ' + [d.city, d.country].filter(Boolean).join(', '), { direction: 'top', offset: [0, -16] })
+          .bindTooltip('RED intelligence: ' + [d.city, d.country].filter(Boolean).join(', '), { direction: 'top', offset: [0, -16] })
       ];
       setTimeout(function () { leafletMap.invalidateSize(); }, 50);
     }, function () {
-      note.textContent = 'Não foi possível carregar o mapa.';
+      note.textContent = 'Could not load the map.';
     });
   }
 
@@ -250,7 +250,7 @@
   function eventDate(obj, action) {
     var ev = obj.events || [];
     for (var i = 0; i < ev.length; i++) {
-      if (ev[i].eventAction === action) return new Date(ev[i].eventDate).toLocaleDateString('pt-BR');
+      if (ev[i].eventAction === action) return new Date(ev[i].eventDate).toLocaleDateString('en-US');
     }
     return '';
   }
@@ -269,9 +269,9 @@
 
   function whois(d) {
     var el = document.getElementById('intel-whois');
-    rows(el, [['Status', 'Consultando RDAP...']]);
+    rows(el, [['Status', 'Querying RDAP...']]);
     var finalUrl = '';
-    if (!/^[0-9a-fA-F:.]+$/.test(d.ip)) { rows(el, [['Status', 'IP inválido para consulta.']]); return; }
+    if (!/^[0-9a-fA-F:.]+$/.test(d.ip)) { rows(el, [['Status', 'Invalid IP for lookup.']]); return; }
     fetch('https://rdap.org/ip/' + d.ip)
       .then(function (r) { finalUrl = r.url; if (!r.ok) throw new Error('rdap ' + r.status); return r.json(); })
       .then(function (j) {
@@ -290,22 +290,22 @@
         var block = j.handle && j.handle.indexOf('/') > 0 ? j.handle
           : (j.startAddress && j.endAddress ? j.startAddress + ' – ' + j.endAddress : j.handle);
         rows(el, [
-          ['Bloco', block],
-          ['Nome da rede', j.name],
-          ['Tipo', j.type],
-          ['Dono do bloco', owner],
-          ['Documento', doc],
+          ['Block', block],
+          ['Network name', j.name],
+          ['Type', j.type],
+          ['Block owner', owner],
+          ['Document', doc],
           ['ASN', j.nicbr_autnum ? 'AS' + j.nicbr_autnum : (d.asn ? 'AS' + String(d.asn).replace(/^AS/i, '') : '')],
-          ['País', j.country],
-          ['Registrado em', eventDate(j, 'registration')],
-          ['Última alteração', eventDate(j, 'last changed')],
-          ['Contato de abuso', abuse],
-          ['Contato técnico', tech],
-          ['Registro (RIR/NIR)', registryName(finalUrl)]
+          ['Country', j.country],
+          ['Registered on', eventDate(j, 'registration')],
+          ['Last changed', eventDate(j, 'last changed')],
+          ['Abuse contact', abuse],
+          ['Technical contact', tech],
+          ['Registry (RIR/NIR)', registryName(finalUrl)]
         ]);
       })
       .catch(function () {
-        rows(el, [['Status', 'Não foi possível consultar o RDAP agora.']]);
+        rows(el, [['Status', 'Could not query RDAP right now.']]);
       });
   }
 
@@ -318,7 +318,7 @@
     if ((m = ua.match(/Firefox\/(\d+)/))) return 'Firefox ' + m[1];
     if ((m = ua.match(/Chrome\/(\d+)/))) return 'Chrome ' + m[1];
     if ((m = ua.match(/Version\/([\d.]+).*Safari/))) return 'Safari ' + m[1];
-    return 'Desconhecido';
+    return 'Unknown';
   }
 
   function osName(ua) {
@@ -330,7 +330,7 @@
     if (/Mac OS X/.test(ua)) return 'macOS';
     if (/CrOS/.test(ua)) return 'ChromeOS';
     if (/Linux/.test(ua)) return 'Linux';
-    return 'Desconhecido';
+    return 'Unknown';
   }
 
   function showConnection(d) {
@@ -339,34 +339,34 @@
     var list = [];
     if (d) {
       list.push(
-        ['Tipo de IP', d.type],
-        ['Provedor (ISP)', d.isp],
-        ['Organização', d.org !== d.isp ? d.org : ''],
+        ['IP type', d.type],
+        ['Provider (ISP)', d.isp],
+        ['Organization', d.org !== d.isp ? d.org : ''],
         ['ASN', d.asn ? 'AS' + String(d.asn).replace(/^AS/i, '') : ''],
-        ['Domínio do provedor', d.domain],
-        ['Coordenadas aprox.', typeof d.lat === 'number' ? d.lat.toFixed(2) + ', ' + d.lon.toFixed(2) : ''],
-        ['CEP aprox.', d.postal],
-        ['Continente', d.continent],
-        ['DDI', d.calling ? '+' + String(d.calling).replace(/^\+/, '') : ''],
-        ['Fuso (pelo IP)', d.tz ? d.tz + (d.utc ? ' (UTC' + d.utc + ')' : '') : '']
+        ['Provider domain', d.domain],
+        ['Approx. coordinates', typeof d.lat === 'number' ? d.lat.toFixed(2) + ', ' + d.lon.toFixed(2) : ''],
+        ['Approx. postal code', d.postal],
+        ['Continent', d.continent],
+        ['Calling code', d.calling ? '+' + String(d.calling).replace(/^\+/, '') : ''],
+        ['Time zone (by IP)', d.tz ? d.tz + (d.utc ? ' (UTC' + d.utc + ')' : '') : '']
       );
     }
     var tz = '';
     try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) {}
     list.push(
-      ['Navegador', browserName(ua)],
-      ['Sistema', osName(ua)],
-      ['Idioma', (navigator.languages || [navigator.language]).join(', ')],
-      ['Tela', screen.width + ' × ' + screen.height + ' @' + (window.devicePixelRatio || 1) + 'x'],
-      ['Janela', window.innerWidth + ' × ' + window.innerHeight],
-      ['Núcleos de CPU', navigator.hardwareConcurrency],
-      ['Memória (aprox.)', navigator.deviceMemory ? navigator.deviceMemory + ' GB' : ''],
-      ['Rede (estimada)', net.effectiveType ? net.effectiveType.toUpperCase() + (net.downlink ? ' · ~' + net.downlink + ' Mbps' : '') : ''],
-      ['Tela de toque', navigator.maxTouchPoints > 0 ? 'Sim (' + navigator.maxTouchPoints + ' pontos)' : 'Não'],
-      ['Fuso do navegador', tz],
-      ['Hora local', new Date().toLocaleString('pt-BR')],
-      ['Do Not Track', navigator.doNotTrack === '1' ? 'Ativado' : 'Desativado'],
-      ['Cookies', navigator.cookieEnabled ? 'Ativados' : 'Bloqueados']
+      ['Browser', browserName(ua)],
+      ['System', osName(ua)],
+      ['Language', (navigator.languages || [navigator.language]).join(', ')],
+      ['Screen', screen.width + ' × ' + screen.height + ' @' + (window.devicePixelRatio || 1) + 'x'],
+      ['Window', window.innerWidth + ' × ' + window.innerHeight],
+      ['CPU cores', navigator.hardwareConcurrency],
+      ['Memory (approx.)', navigator.deviceMemory ? navigator.deviceMemory + ' GB' : ''],
+      ['Network (estimated)', net.effectiveType ? net.effectiveType.toUpperCase() + (net.downlink ? ' · ~' + net.downlink + ' Mbps' : '') : ''],
+      ['Touchscreen', navigator.maxTouchPoints > 0 ? 'Yes (' + navigator.maxTouchPoints + ' points)' : 'No'],
+      ['Browser time zone', tz],
+      ['Local time', new Date().toLocaleString('en-US')],
+      ['Do Not Track', navigator.doNotTrack === '1' ? 'Enabled' : 'Disabled'],
+      ['Cookies', navigator.cookieEnabled ? 'Enabled' : 'Blocked']
     );
     rows(document.getElementById('intel-conn'), list);
   }
@@ -635,7 +635,7 @@
     ctx.textAlign = 'left';
     ctx.font = '26px Anton, Impact, sans-serif';
     ctx.fillStyle = TAN;
-    ctx.fillText('PONTOS ' + score, 16, 34);
+    ctx.fillText('SCORE ' + score, 16, 34);
     if (combo >= 3) {
       ctx.fillStyle = '#ffd700';
       ctx.font = '18px Anton, Impact, sans-serif';

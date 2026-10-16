@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>lolbin | Portfólio</title>
+<title>lolbin | Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lato:wght@400;700&display=swap" rel="stylesheet">
@@ -18,33 +18,33 @@
 
 <header class="hero">
   <div class="hero-top">
-    <img class="soldier" id="soldier" src="soldier.svg" alt="Soldier do TF2 com lança-foguetes" width="260" height="280">
+    <img class="soldier" id="soldier" src="soldier.svg" alt="TF2 Soldier with a rocket launcher" width="260" height="280">
     <h1 class="logo">lolbin</h1>
   </div>
-  <p class="tagline">CTF Player <span class="vs">//</span> focus on web vulneratilities <span class="vs">//</span></p>
+  <p class="tagline">CTF Player <span class="vs">//</span> focus on web vulnerabilities <span class="vs">//</span></p>
   <nav>
     <button class="btn btn-play" id="play-btn" type="button">Play Survive</button>
-    <a class="btn" href="#sobre">Sobre</a>
+    <a class="btn" href="#about">About</a>
   </nav>
 </header>
 
-<section class="battle" aria-label="Batalha RED vs BLU">
+<section class="battle" aria-label="RED vs BLU battle">
   <canvas id="battle" aria-hidden="true"></canvas>
 </section>
 
 <main>
 
-  <section id="sobre" class="panel">
-    <h2 class="panel-header">Sobre mim</h2>
+  <section id="about" class="panel">
+    <h2 class="panel-header">About me</h2>
     <div class="panel-body">
-      <p class="label">Certificações</p>
+      <p class="label">Certifications</p>
       <ul class="items">
         <li class="item unusual"><span class="name">OSCP+</span><span class="quality">Unusual</span></li>
         <li class="item strange"><span class="name">OSCP</span><span class="quality">Strange</span></li>
         <li class="item genuine"><span class="name">OSWP</span><span class="quality">Genuine</span></li>
       </ul>
 
-      <p class="label">Conquistas</p>
+      <p class="label">Achievements</p>
       <div class="achievement">
         <span class="medal" aria-hidden="true">2</span>
         <p>
@@ -54,7 +54,7 @@
       <div class="achievement">
         <span class="medal" aria-hidden="true">★</span>
         <p>
-          Projeto eHorizon — Plataforma de Threat Intelligence vendida à holding e-Safer, virando <a href="https://e-safer.com.br/rastro-digital/">Rastro Digital</a>.
+          eHorizon Project — Threat Intelligence platform sold to the e-Safer holding, becoming <a href="https://e-safer.com.br/rastro-digital/">Rastro Digital</a>.
         </p>
       </div>
     </div>
@@ -70,57 +70,57 @@
 
 <div class="game" id="game" role="dialog" aria-modal="true" aria-label="Play Survive" hidden>
   <canvas id="game-canvas" tabindex="-1"></canvas>
-  <button class="game-close" id="game-close" type="button" aria-label="Fechar jogo">&times;</button>
+  <button class="game-close" id="game-close" type="button" aria-label="Close game">&times;</button>
 
   <div class="game-card" id="game-start">
     <h2>Play Survive</h2>
-    <p>Você é o Soldier. Mire com o mouse (ou toque na tela) e dispare foguetes nos alvos.</p>
-    <p class="game-small">Alvo grande 10 pts &middot; pequeno 25 pts &middot; Scout BLU 50 pts &middot; acertos em sequência multiplicam</p>
-    <p class="game-small">30 segundos no relógio.</p>
-    <button class="btn btn-play" id="game-go" type="button">Começar</button>
+    <p>You are the Soldier. Aim with the mouse (or tap the screen) and fire rockets at the targets.</p>
+    <p class="game-small">Big target 10 pts &middot; small 25 pts &middot; BLU Scout 50 pts &middot; consecutive hits multiply</p>
+    <p class="game-small">30 seconds on the clock.</p>
+    <button class="btn btn-play" id="game-go" type="button">Start</button>
   </div>
 
   <div class="game-card game-card-wide" id="game-end" hidden>
-    <h2>Tempo esgotado!</h2>
-    <p class="game-score">Pontuação: <strong id="end-score">0</strong></p>
+    <h2>Time's up!</h2>
+    <p class="game-score">Score: <strong id="end-score">0</strong></p>
     <p class="game-small" id="end-stats"></p>
 
     <div class="dossier">
       <div class="intel">
-        <p class="intel-title">Inteligência capturada</p>
+        <p class="intel-title">Captured intelligence</p>
         <div class="intel-body">
           <img id="intel-flag" alt="" width="80" height="54" hidden>
           <div>
-            <p class="intel-ip" id="intel-ip">Localizando...</p>
+            <p class="intel-ip" id="intel-ip">Locating...</p>
             <p class="intel-loc" id="intel-loc"></p>
           </div>
         </div>
       </div>
 
       <div class="intel intel-map">
-        <p class="intel-title">Mapa da operação</p>
+        <p class="intel-title">Operation map</p>
         <div class="map-frame">
-          <div id="intel-map" aria-label="Mapa com a área aproximada da sua conexão"></div>
-          <p class="map-note" id="map-note">Área aproximada da sua conexão (precisão de cidade, não do endereço).</p>
+          <div id="intel-map" aria-label="Map showing the approximate area of your connection"></div>
+          <p class="map-note" id="map-note">Approximate area of your connection (city-level accuracy, not your address).</p>
         </div>
       </div>
     </div>
 
     <details class="intel-details">
-      <summary>WHOIS / RDAP do IP</summary>
-      <dl class="intel-table" id="intel-whois"><dt>Status</dt><dd>Aguardando...</dd></dl>
+      <summary>IP WHOIS / RDAP</summary>
+      <dl class="intel-table" id="intel-whois"><dt>Status</dt><dd>Waiting...</dd></dl>
     </details>
 
     <details class="intel-details">
-      <summary>Conexão e navegador</summary>
+      <summary>Connection and browser</summary>
       <dl class="intel-table" id="intel-conn"></dl>
     </details>
 
-    <p class="game-small intel-privacy">Esses dados aparecem só para você e não são salvos por este site. Fontes: ipwho.is, rdap.org e o seu próprio navegador.</p>
+    <p class="game-small intel-privacy">This data is shown only to you and is not stored by this site. Sources: ipwho.is, rdap.org and your own browser.</p>
 
     <div class="game-actions">
-      <button class="btn btn-play" id="game-again" type="button">Jogar de novo</button>
-      <button class="btn" id="game-exit" type="button">Sair</button>
+      <button class="btn btn-play" id="game-again" type="button">Play again</button>
+      <button class="btn" id="game-exit" type="button">Exit</button>
     </div>
   </div>
 </div>
