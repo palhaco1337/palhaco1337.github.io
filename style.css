@@ -251,6 +251,21 @@ main {
 .item.strange { --q: var(--strange); }
 .item.genuine { --q: #6e9e78; }
 
+.item.profile {
+  padding: 0;
+}
+
+.item.profile a {
+  display: block;
+  padding: 0.75rem 0.9rem;
+  border: 0;
+  color: inherit;
+}
+
+.item.profile:hover {
+  background: #4a4139;
+}
+
 .achievement {
   display: flex;
   align-items: center;
