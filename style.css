@@ -262,6 +262,14 @@ main {
   color: inherit;
 }
 
+.item.profile .icon {
+  display: block;
+  width: 28px;
+  height: 28px;
+  margin: 0 auto 0.4rem;
+  fill: var(--q, var(--unique));
+}
+
 .item.profile:hover {
   background: #4a4139;
 }
